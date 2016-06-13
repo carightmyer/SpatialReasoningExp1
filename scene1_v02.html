@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>Spatial Reasoning</title>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script src="js/three.js"></script>
+		<script src="js/backgroundPlanes3.js"></script>
+		<script src="js/rodAndSquare.js"></script>
+		<script src="js/ThreeCSG.js"></script>
+		<script>
+			var camera1, scene1, renderer1;
+			var width1 = height1 = 600;
+			var len = 1000;
+			var backgroundColor = 0xDBE6F0//0xe3e3e3;
+			//0xE0E6EB;//0xDBE6F0//0xe3e6e8;//0xadd8e6//0xf2f2f2; //0xe6f2ff;
+			
+			// SCENE
+			scene1 = new THREE.Scene();
+			
+			// CAMERA
+			var angle = 45;
+			var aspect = width1 / height1
+			var frustNear = 1000;
+			var frustFar = 10*len;
+			var camPosX = camPosZ = 2*len;
+			var camPosY = 1.5*len
+			
+			camera1 = new THREE.PerspectiveCamera( angle, aspect, frustNear, frustFar);
+			camera1.position.set(camPosX, camPosY, camPosZ);
+			scene1.add( camera1 );
+
+			// RENDERER
+			renderer1 = new THREE.WebGLRenderer();
+			renderer1.setSize(width1, height1);
+			renderer1.setClearColor(backgroundColor);
+			document.body.appendChild( renderer1.domElement );
+			
+			// LIGHT
+			//directional light
+			var directionalLight = new THREE.DirectionalLight(0xffffff,1);
+			directionalLight.position.set(1, .5, .5).normalize();
+			scene1.add(directionalLight);
+			/*//hemisphere light
+			var hemisphereLight = new THREE.HemisphereLight(0xffffff,0xe3e3e3,1);
+			hemisphereLight.position.set(len, 2*len, -len).normalize();
+			scene1.add(hemisphereLight);
+			var directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+			directionalLight.position.set( 2*len, 2*len, 1*len );
+			directionalLight.rotation.set( 0, 2*len, 0 );
+			scene1.add( directionalLight );*/
+
+			// BACKGROUND
+			makePlanes(len, scene1);
+			
+			// OBJECT
+			var obj = rodAndSquare(len, 45)
+			scene1.add( obj );
+			
+			camera1.lookAt(obj.position);
+			renderer1.render( scene1, camera1 );
+			
+			function degToRad(deg) {
+				return deg*(Math.PI/180);
+			}
+
+		</script>
+	</body>
+</html>
